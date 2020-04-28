@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:ngsleeptracker/firstscreen.dart';
-import 'package:numberpicker/numberpicker.dart';
 
 class SecondScreen extends StatefulWidget {
   @override
@@ -10,6 +9,13 @@ class SecondScreen extends StatefulWidget {
 }
 
 class _SecondScreenState extends State<SecondScreen> {
+  List<String> _dropdownOptions = ['Night\'s Sleep', 'Nap'];
+  String _selectedValue;
+
+  Duration initialDuration = new Duration();
+
+  int selectItem = 1;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,14 +50,16 @@ class _SecondScreenState extends State<SecondScreen> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              subtitle: Text(
-                // TODO to modify
-                '${DateFormat.d().format(new DateTime.now())} '
-                    '${DateFormat.LLLL().format(new DateTime.now())} '
-                    '${DateFormat.y().format(new DateTime.now())}, '
-                    '${DateFormat.Hm().format(new DateTime.now())}',
-                style: TextStyle(
-                  fontSize: 17.0,
+              subtitle: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 15.0),
+                child: Text(
+                  '${DateFormat.d().format(new DateTime.now())} '
+                  '${DateFormat.LLLL().format(new DateTime.now())} '
+                  '${DateFormat.y().format(new DateTime.now())}, '
+                  '${DateFormat.Hm().format(new DateTime.now())}',
+                  style: TextStyle(
+                    fontSize: 17.0,
+                  ),
                 ),
               ),
             ),
@@ -68,14 +76,29 @@ class _SecondScreenState extends State<SecondScreen> {
                 style: TextStyle(
                   color: Colors.indigo[900],
                   fontSize: 15.0,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-              subtitle: DropdownButton(
-                items: [],
-//                  onChanged: (){
-//
-//                  } ,
-                // TODO
+              subtitle: DropdownButton<String>(
+                hint: Text(
+                  'Night, nap, etc',
+                  style: TextStyle(
+                    color: Colors.grey.shade700,
+                  ),
+                ),
+                value: _selectedValue,
+                onChanged: (String newValue) {
+                  setState(() {
+                    _selectedValue = newValue;
+                  });
+                },
+                items: _dropdownOptions
+                    .map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
               ),
             ),
           ),
@@ -91,23 +114,52 @@ class _SecondScreenState extends State<SecondScreen> {
                 style: TextStyle(
                   color: Colors.indigo[900],
                   fontSize: 15.0,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-              onTap: () {
-                NumberPicker.integer(
-                  initialValue: 50,
-                  minValue: 0,
-                  maxValue: 100,
-                  onChanged: null, //TODO
-                );
-              },
+              subtitle: FlatButton(
+                  child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        '${initialDuration.inHours}:${initialDuration.inMinutes.remainder(60)}',
+                        style: TextStyle(
+                          color: Colors.grey.shade700,
+                          fontSize: 17.0,
+                        ),
+                      )),
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext builder) {
+                          return AlertDialog(
+                            content: Container(
+                              height: MediaQuery.of(context)
+                                      .copyWith()
+                                      .size
+                                      .height /
+                                  3,
+                              child: CupertinoTimerPicker(
+                                mode: CupertinoTimerPickerMode.hm,
+                                minuteInterval: 5,
+                                initialTimerDuration: initialDuration,
+                                onTimerDurationChanged: (Duration newDuration) {
+                                  setState(() {
+                                    initialDuration = newDuration;
+                                  });
+                                },
+                              ),
+                            ),
+                          );
+                        });
+                  }),
             ),
           ),
           SizedBox(
-            height: 60,
+            height: 40,
           ),
           RaisedButton(
             onPressed: () {
+              //TODO: make app actually save data
               Navigator.push(
                 context,
                 new MaterialPageRoute(builder: (context) => new FirstScreen()),
