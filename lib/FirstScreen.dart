@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:ngsleeptracker/secondscreen.dart';
+import 'package:ngsleeptracker/SecondScreen.dart';
 
 class FirstScreen extends StatefulWidget {
   @override
@@ -9,6 +9,44 @@ class FirstScreen extends StatefulWidget {
 }
 
 class _FirstScreenState extends State<FirstScreen> {
+  //dummy data to see how listview shows info
+  List<SleepRecord> sleepRecordList = [
+    SleepRecord(DateTime.now().add(Duration(hours: 2)), 'Nap',
+        Duration(hours: 3, minutes: 15))
+  ];
+
+  ListTile prepareListTile(List<SleepRecord> sleepRecordList, int index) {
+    DateTime dateTime = sleepRecordList
+        .elementAt(index)
+        .currentDateTime;
+    String napOrSleep = sleepRecordList
+        .elementAt(index)
+        .dropdownSelectedValue;
+    Duration sleepDuration = sleepRecordList
+        .elementAt(index)
+        .selectedDuration;
+
+    return ListTile(
+      leading: Text(
+        '${DateFormat('h:mm\n a').format(dateTime)}',
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      title: Text(
+        '$napOrSleep',
+        style: TextStyle(
+          color: Colors.indigo,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      subtitle: Text(
+        '${sleepDuration.inHours} hours ${sleepDuration.inMinutes.remainder(
+            60)} minutes',
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,12 +116,12 @@ class _FirstScreenState extends State<FirstScreen> {
                 width: double.infinity,
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 25.0),
+                padding:
+                const EdgeInsets.symmetric(vertical: 0.0, horizontal: 25.0),
                 child: Text(
                   '${DateFormat.EEEE().format(new DateTime.now()).toUpperCase()}, '
-                      '${DateFormat.d().format(new DateTime.now())} '
-                      '${DateFormat.LLL().format(new DateTime.now()).toUpperCase()} '
-                      '${DateFormat.y().format(new DateTime.now())}',
+                      '${DateFormat.d().add_LLL().add_y().format(
+                      new DateTime.now()).toUpperCase()}',
                   style: TextStyle(
                     fontSize: 15.0,
                     fontWeight: FontWeight.bold,
@@ -91,6 +129,18 @@ class _FirstScreenState extends State<FirstScreen> {
                   ),
                 ),
               ),
+              ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: sleepRecordList.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Card(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: prepareListTile(sleepRecordList, index),
+                      ),
+                      // litems[index]
+                    );
+                  }),
             ],
           ),
         ],

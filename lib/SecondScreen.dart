@@ -1,26 +1,38 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:ngsleeptracker/firstscreen.dart';
+import 'package:ngsleeptracker/FirstScreen.dart';
 
 class SecondScreen extends StatefulWidget {
+
   @override
   _SecondScreenState createState() => _SecondScreenState();
 }
 
 class _SecondScreenState extends State<SecondScreen> {
+
   List<String> _dropdownOptions = ['Night\'s Sleep', 'Nap'];
-  String _selectedValue;
+  String selectedValue;
 
-  Duration initialDuration = new Duration();
+  Duration sleepDuration = new Duration();
 
-  int selectItem = 1;
+  List<SleepRecord> sleepRecordList = [];
+
+  Text formatDateTime() {
+    DateTime dateInOurZone = DateTime.now().add(Duration(hours: 2));
+    return Text(
+      '${DateFormat.d().add_LLLL().add_y().format(dateInOurZone)}, '
+          '${DateFormat.Hm().format(dateInOurZone)}',
+      style: TextStyle(
+        fontSize: 17.0,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        //should add back button
         automaticallyImplyLeading: true,
         title: Text('Sleep Tracker'),
         backgroundColor: Colors.amber[600],
@@ -52,15 +64,7 @@ class _SecondScreenState extends State<SecondScreen> {
               ),
               subtitle: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 15.0),
-                child: Text(
-                  '${DateFormat.d().format(new DateTime.now())} '
-                  '${DateFormat.LLLL().format(new DateTime.now())} '
-                  '${DateFormat.y().format(new DateTime.now())}, '
-                  '${DateFormat.Hm().format(new DateTime.now())}',
-                  style: TextStyle(
-                    fontSize: 17.0,
-                  ),
-                ),
+                child: formatDateTime(),
               ),
             ),
           ),
@@ -86,10 +90,10 @@ class _SecondScreenState extends State<SecondScreen> {
                     color: Colors.grey.shade700,
                   ),
                 ),
-                value: _selectedValue,
+                value: selectedValue,
                 onChanged: (String newValue) {
                   setState(() {
-                    _selectedValue = newValue;
+                    selectedValue = newValue;
                   });
                 },
                 items: _dropdownOptions
@@ -121,7 +125,8 @@ class _SecondScreenState extends State<SecondScreen> {
                   child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        '${initialDuration.inHours}:${initialDuration.inMinutes.remainder(60)}',
+                        '${sleepDuration.inHours}:${sleepDuration.inMinutes
+                            .remainder(60)}',
                         style: TextStyle(
                           color: Colors.grey.shade700,
                           fontSize: 17.0,
@@ -141,14 +146,20 @@ class _SecondScreenState extends State<SecondScreen> {
                               child: CupertinoTimerPicker(
                                 mode: CupertinoTimerPickerMode.hm,
                                 minuteInterval: 5,
-                                initialTimerDuration: initialDuration,
+                                initialTimerDuration: sleepDuration,
                                 onTimerDurationChanged: (Duration newDuration) {
                                   setState(() {
-                                    initialDuration = newDuration;
+                                    sleepDuration = newDuration;
                                   });
                                 },
                               ),
                             ),
+                            actions: [
+                              FlatButton(
+                                child: Text('Close'),
+                                onPressed: () => Navigator.pop(context),
+                              )
+                            ],
                           );
                         });
                   }),
@@ -159,11 +170,31 @@ class _SecondScreenState extends State<SecondScreen> {
           ),
           RaisedButton(
             onPressed: () {
-              //TODO: make app actually save data
-              Navigator.push(
-                context,
-                new MaterialPageRoute(builder: (context) => new FirstScreen()),
-              );
+              SleepRecord currentRecord =
+              new SleepRecord(DateTime.now(), selectedValue, sleepDuration);
+              if (selectedValue != null && !(sleepDuration.inMinutes == 0)) {
+                sleepRecordList.add(currentRecord);
+                Navigator.push(
+                  //TODO: make app pass data to the first screen
+                  context,
+                  new MaterialPageRoute(
+                      builder: (context) => new FirstScreen()),
+                );
+              } else {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext builder) {
+                      return AlertDialog(
+                        title: Text('Please fill all the fields.'),
+                        actions: [
+                          FlatButton(
+                            child: Text('Close'),
+                            onPressed: () => Navigator.pop(context),
+                          )
+                        ],
+                      );
+                    });
+              }
             },
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(80.0)),
@@ -191,4 +222,13 @@ class _SecondScreenState extends State<SecondScreen> {
       ),
     );
   }
+}
+
+class SleepRecord {
+  DateTime currentDateTime;
+  String dropdownSelectedValue;
+  Duration selectedDuration;
+
+  SleepRecord(this.currentDateTime, this.dropdownSelectedValue,
+      this.selectedDuration);
 }
