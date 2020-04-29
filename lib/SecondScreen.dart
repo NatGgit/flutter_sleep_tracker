@@ -16,7 +16,7 @@ class _SecondScreenState extends State<SecondScreen> {
 
   Duration sleepDuration = new Duration();
 
-  List<SleepRecord> sleepRecordList = [];
+  //List<SleepRecord> sleepRecordList = [];
 
   Text formatDateTime() {
     DateTime dateInOurZone = DateTime.now().add(Duration(hours: 2));
@@ -138,11 +138,10 @@ class _SecondScreenState extends State<SecondScreen> {
                         builder: (BuildContext builder) {
                           return AlertDialog(
                             content: Container(
-                              height: MediaQuery.of(context)
-                                      .copyWith()
-                                      .size
-                                      .height /
-                                  3,
+                              height: MediaQuery
+                                  .of(context)
+                                  .size
+                                  .height / 3,
                               child: CupertinoTimerPicker(
                                 mode: CupertinoTimerPickerMode.hm,
                                 minuteInterval: 5,
@@ -173,8 +172,7 @@ class _SecondScreenState extends State<SecondScreen> {
               SleepRecord sleepRecordToAdd =
               new SleepRecord(DateTime.now(), selectedValue, sleepDuration);
               if (selectedValue != null && !(sleepDuration.inMinutes == 0)) {
-                sleepRecordList.add(sleepRecordToAdd);
-                Navigator.pop(context, sleepRecordList);
+                Navigator.pop(context, sleepRecordToAdd);
               } else {
                 showDialog(
                     context: context,
