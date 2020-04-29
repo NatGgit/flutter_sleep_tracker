@@ -170,16 +170,11 @@ class _SecondScreenState extends State<SecondScreen> {
           ),
           RaisedButton(
             onPressed: () {
-              SleepRecord currentRecord =
+              SleepRecord sleepRecordToAdd =
               new SleepRecord(DateTime.now(), selectedValue, sleepDuration);
               if (selectedValue != null && !(sleepDuration.inMinutes == 0)) {
-                sleepRecordList.add(currentRecord);
-                Navigator.push(
-                  //TODO: make app pass data to the first screen
-                  context,
-                  new MaterialPageRoute(
-                      builder: (context) => new FirstScreen()),
-                );
+                sleepRecordList.add(sleepRecordToAdd);
+                Navigator.pop(context, sleepRecordList);
               } else {
                 showDialog(
                     context: context,

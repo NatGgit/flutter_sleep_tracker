@@ -9,11 +9,8 @@ class FirstScreen extends StatefulWidget {
 }
 
 class _FirstScreenState extends State<FirstScreen> {
-  //dummy data to see how listview shows info
-  List<SleepRecord> sleepRecordList = [
-    SleepRecord(DateTime.now().add(Duration(hours: 2)), 'Nap',
-        Duration(hours: 3, minutes: 15))
-  ];
+
+  List<SleepRecord> sleepRecordList = [];
 
   ListTile prepareListTile(List<SleepRecord> sleepRecordList, int index) {
     DateTime dateTime = sleepRecordList
@@ -47,6 +44,18 @@ class _FirstScreenState extends State<FirstScreen> {
     );
   }
 
+  void awaitReturnValueFromSecondScreen(BuildContext context) async {
+    final result = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SecondScreen(),
+        ));
+
+    setState(() {
+      sleepRecordList += result;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,11 +85,7 @@ class _FirstScreenState extends State<FirstScreen> {
               ),
               RaisedButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    new MaterialPageRoute(
-                        builder: (context) => new SecondScreen()),
-                  );
+                  awaitReturnValueFromSecondScreen(context);
                 },
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(80.0)),
@@ -138,7 +143,6 @@ class _FirstScreenState extends State<FirstScreen> {
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
                         child: prepareListTile(sleepRecordList, index),
                       ),
-                      // litems[index]
                     );
                   }),
             ],
@@ -146,5 +150,8 @@ class _FirstScreenState extends State<FirstScreen> {
         ],
       ),
     );
+    throw UnimplementedError();
   }
 }
+
+
