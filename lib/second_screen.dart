@@ -9,17 +9,17 @@ class SecondScreen extends StatefulWidget {
 }
 
 class _SecondScreenState extends State<SecondScreen> {
-  List<String> _dropdownOptions = ['Night\'s Sleep', 'Nap'];
+  final List<String> _dropdownOptions = ["Night's Sleep", 'Nap'];
   String selectedValue;
 
-  Duration sleepDuration = new Duration();
+  Duration sleepDuration = const Duration();
 
   Text formatDateTime() {
-    DateTime dateInOurZone = DateTime.now().add(Duration(hours: 2));
+    final DateTime dateInOurZone = DateTime.now().add(const Duration(hours: 2));
     return Text(
       '${DateFormat.d().add_LLLL().add_y().format(dateInOurZone)}, '
       '${DateFormat.Hm().format(dateInOurZone)}',
-      style: TextStyle(
+      style: const TextStyle(
         fontSize: 17.0,
       ),
     );
@@ -30,21 +30,21 @@ class _SecondScreenState extends State<SecondScreen> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
-        title: Text('Sleep Tracker'),
+        title: const Text('Sleep Tracker'),
         backgroundColor: Colors.amber[600],
       ),
       body: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          SizedBox(
+          const SizedBox(
             height: 10.0,
           ),
           Container(height: 130, child: Image.asset('images/cloud.png')),
-          SizedBox(
+          const SizedBox(
             height: 10.0,
           ),
           Card(
-            margin: EdgeInsets.all(5.0),
+            margin: const EdgeInsets.all(5.0),
             child: ListTile(
               leading: Icon(
                 Icons.calendar_today,
@@ -65,7 +65,7 @@ class _SecondScreenState extends State<SecondScreen> {
             ),
           ),
           Card(
-            margin: EdgeInsets.all(5.0),
+            margin: const EdgeInsets.all(5.0),
             child: ListTile(
               leading: Icon(
                 Icons.brightness_3,
@@ -103,7 +103,7 @@ class _SecondScreenState extends State<SecondScreen> {
             ),
           ),
           Card(
-            margin: EdgeInsets.all(5.0),
+            margin: const EdgeInsets.all(5.0),
             child: ListTile(
               leading: Icon(
                 Icons.access_time,
@@ -118,56 +118,58 @@ class _SecondScreenState extends State<SecondScreen> {
                 ),
               ),
               subtitle: FlatButton(
-                  child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        '${sleepDuration.inHours}:${sleepDuration.inMinutes
-                            .remainder(60)}',
-                        style: TextStyle(
-                          color: Colors.grey.shade700,
-                          fontSize: 17.0,
-                        ),
-                      )),
-                  onPressed: () {
-                    // corrected due to changes in analysis_options (type added)
-                    showDialog<AlertDialog>(
-                        context: context,
-                        builder: (BuildContext builder) {
-                          return AlertDialog(
-                            content: Container(
-                              height: MediaQuery
-                                  .of(context)
-                                  .size
-                                  .height / 3,
-                              child: CupertinoTimerPicker(
-                                mode: CupertinoTimerPickerMode.hm,
-                                minuteInterval: 5,
-                                initialTimerDuration: sleepDuration,
-                                onTimerDurationChanged: (Duration newDuration) {
-                                  setState(() {
-                                    sleepDuration = newDuration;
-                                  });
-                                },
-                              ),
+                onPressed: () {
+                  // corrected due to changes in analysis_options (type added)
+                  showDialog<AlertDialog>(
+                      context: context,
+                      builder: (BuildContext builder) {
+                        return AlertDialog(
+                          content: Container(
+                            height: MediaQuery
+                                .of(context)
+                                .size
+                                .height / 3,
+                            child: CupertinoTimerPicker(
+                              mode: CupertinoTimerPickerMode.hm,
+                              minuteInterval: 5,
+                              initialTimerDuration: sleepDuration,
+                              onTimerDurationChanged: (Duration newDuration) {
+                                setState(() {
+                                  sleepDuration = newDuration;
+                                });
+                              },
                             ),
-                            actions: [
-                              FlatButton(
-                                child: Text('Close'),
-                                onPressed: () => Navigator.pop(context),
-                              )
-                            ],
-                          );
-                        });
-                  }),
+                          ),
+                          actions: [
+                            FlatButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: const Text('Close'),
+                            )
+                          ],
+                        );
+                      });
+                },
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    '${sleepDuration.inHours}:${sleepDuration.inMinutes
+                        .remainder(60)}',
+                    style: TextStyle(
+                      color: Colors.grey.shade700,
+                      fontSize: 17.0,
+                    ),
+                  ),
+                ),
+              ),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 40,
           ),
           RaisedButton(
             onPressed: () {
-              SleepRecord sleepRecordToAdd =
-              new SleepRecord(DateTime.now(), selectedValue, sleepDuration);
+              final SleepRecord sleepRecordToAdd =
+              SleepRecord(DateTime.now(), selectedValue, sleepDuration);
               if (selectedValue != null && !(sleepDuration.inMinutes == 0)) {
                 Navigator.pop(context, sleepRecordToAdd);
               } else {
@@ -176,11 +178,11 @@ class _SecondScreenState extends State<SecondScreen> {
                     context: context,
                     builder: (BuildContext builder) {
                       return AlertDialog(
-                        title: Text('Please fill all the fields.'),
+                        title: const Text('Please fill all the fields.'),
                         actions: [
                           FlatButton(
-                            child: Text('Close'),
                             onPressed: () => Navigator.pop(context),
+                            child: const Text('Close'),
                           )
                         ],
                       );
@@ -189,20 +191,19 @@ class _SecondScreenState extends State<SecondScreen> {
             },
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(80.0)),
-            padding: EdgeInsets.all(0.0),
+            padding: const EdgeInsets.all(0.0),
             child: Ink(
               decoration: BoxDecoration(
-                  gradient: LinearGradient(
+                  gradient: const LinearGradient(
                     colors: [Color(0xff374ABE), Color(0xff64B6FF)],
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
                   ),
                   borderRadius: BorderRadius.circular(30.0)),
               child: Container(
-                constraints: BoxConstraints(maxWidth: 300.0, minHeight: 50.0),
+                constraints: const BoxConstraints(
+                    maxWidth: 300.0, minHeight: 50.0),
                 alignment: Alignment.center,
                 child: Text(
-                  "Save",
+                  'Save',
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.white),
                 ),

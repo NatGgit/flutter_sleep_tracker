@@ -13,19 +13,22 @@ class _FirstScreenState extends State<FirstScreen> {
   List<SleepRecord> sleepRecordList = [];
 
   ListTile prepareListTile(List<SleepRecord> sleepRecordList, int index) {
-    DateTime dateTime = sleepRecordList.elementAt(index).currentDateTime;
-    String napOrSleep = sleepRecordList.elementAt(index).dropdownSelectedValue;
-    Duration sleepDuration = sleepRecordList.elementAt(index).selectedDuration;
+    final DateTime dateTime = sleepRecordList.elementAt(index).currentDateTime;
+    final String napOrSleep =
+        sleepRecordList.elementAt(index).dropdownSelectedValue;
+    final Duration sleepDuration =
+        sleepRecordList.elementAt(index).selectedDuration;
 
     return ListTile(
       leading: Text(
+        // ignore: unnecessary_string_interpolations
         '${DateFormat('h:mm\n a').format(dateTime)}',
         style: TextStyle(
           fontWeight: FontWeight.bold,
         ),
       ),
       title: Text(
-        '$napOrSleep',
+        napOrSleep,
         style: TextStyle(
           color: Colors.indigo,
           fontWeight: FontWeight.bold,
@@ -38,7 +41,7 @@ class _FirstScreenState extends State<FirstScreen> {
     );
   }
 
-  void awaitReturnValueFromSecondScreen(BuildContext context) async {
+  Future<void> awaitReturnValueFromSecondScreen(BuildContext context) async {
     final SleepRecord result = await Navigator.push(
         context,
         MaterialPageRoute(
@@ -58,7 +61,7 @@ class _FirstScreenState extends State<FirstScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Sleep Tracker'),
+        title: const Text('Sleep Tracker'),
         backgroundColor: Colors.amber[600],
       ),
       body: Column(
@@ -72,11 +75,11 @@ class _FirstScreenState extends State<FirstScreen> {
             ),
           ),
           Text(
-            'Get to know your baby\'s sleep patterns and keep\n'
-                ' track of how much sleep they are getting here.',
+            "Get to know your baby's sleep patterns and keep\n"
+                " track of how much sleep they are getting here.",
             style: TextStyle(color: Colors.grey.shade700),
           ),
-          SizedBox(
+          const SizedBox(
             height: 25.0,
             width: double.infinity,
           ),
@@ -86,20 +89,19 @@ class _FirstScreenState extends State<FirstScreen> {
             },
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(80.0)),
-            padding: EdgeInsets.all(0.0),
+            padding: const EdgeInsets.all(0.0),
             child: Ink(
               decoration: BoxDecoration(
-                  gradient: LinearGradient(
+                  gradient: const LinearGradient(
                     colors: [Color(0xff374ABE), Color(0xff64B6FF)],
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
                   ),
                   borderRadius: BorderRadius.circular(30.0)),
               child: Container(
-                constraints: BoxConstraints(maxWidth: 300.0, minHeight: 50.0),
+                constraints:
+                const BoxConstraints(maxWidth: 300.0, minHeight: 50.0),
                 alignment: Alignment.center,
                 child: Text(
-                  "Add new sleeping record",
+                  'Add new sleeping record',
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.white),
                 ),
@@ -107,12 +109,12 @@ class _FirstScreenState extends State<FirstScreen> {
             ),
           ),
           Container(
-            padding: EdgeInsets.fromLTRB(25, 50, 25, 15),
+            padding: const EdgeInsets.fromLTRB(25, 50, 25, 15),
             alignment: Alignment.bottomLeft,
             child: Text(
-              '${DateFormat.EEEE().format(new DateTime.now()).toUpperCase()}, '
+              '${DateFormat.EEEE().format(DateTime.now()).toUpperCase()}, '
                   '${DateFormat.d().add_LLL().add_y()
-                  .format(new DateTime.now())
+                  .format(DateTime.now())
                   .toUpperCase()}',
               style: TextStyle(
                 fontSize: 15.0,
@@ -128,7 +130,6 @@ class _FirstScreenState extends State<FirstScreen> {
                 .height / 3,
             alignment: Alignment.topLeft,
             child: ListView.builder(
-              //shrinkWrap: true,
                 itemCount: sleepRecordList.length,
                 itemBuilder: (BuildContext context, int index) {
                   return Card(
