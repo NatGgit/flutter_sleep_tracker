@@ -1,28 +1,24 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:ngsleeptracker/FirstScreen.dart';
+import 'package:ngsleeptracker/sleep_record.dart';
 
 class SecondScreen extends StatefulWidget {
-
   @override
   _SecondScreenState createState() => _SecondScreenState();
 }
 
 class _SecondScreenState extends State<SecondScreen> {
-
   List<String> _dropdownOptions = ['Night\'s Sleep', 'Nap'];
   String selectedValue;
 
   Duration sleepDuration = new Duration();
 
-  //List<SleepRecord> sleepRecordList = [];
-
   Text formatDateTime() {
     DateTime dateInOurZone = DateTime.now().add(Duration(hours: 2));
     return Text(
       '${DateFormat.d().add_LLLL().add_y().format(dateInOurZone)}, '
-          '${DateFormat.Hm().format(dateInOurZone)}',
+      '${DateFormat.Hm().format(dateInOurZone)}',
       style: TextStyle(
         fontSize: 17.0,
       ),
@@ -133,7 +129,8 @@ class _SecondScreenState extends State<SecondScreen> {
                         ),
                       )),
                   onPressed: () {
-                    showDialog(
+                    // corrected due to changes in analysis_options (type added)
+                    showDialog<AlertDialog>(
                         context: context,
                         builder: (BuildContext builder) {
                           return AlertDialog(
@@ -174,7 +171,8 @@ class _SecondScreenState extends State<SecondScreen> {
               if (selectedValue != null && !(sleepDuration.inMinutes == 0)) {
                 Navigator.pop(context, sleepRecordToAdd);
               } else {
-                showDialog(
+                // corrected due to changes in analysis_options (type added)
+                showDialog<AlertDialog>(
                     context: context,
                     builder: (BuildContext builder) {
                       return AlertDialog(
@@ -215,13 +213,4 @@ class _SecondScreenState extends State<SecondScreen> {
       ),
     );
   }
-}
-
-class SleepRecord {
-  DateTime currentDateTime;
-  String dropdownSelectedValue;
-  Duration selectedDuration;
-
-  SleepRecord(this.currentDateTime, this.dropdownSelectedValue,
-      this.selectedDuration);
 }

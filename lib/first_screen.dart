@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:ngsleeptracker/SecondScreen.dart';
+import 'package:ngsleeptracker/second_screen.dart';
+import 'package:ngsleeptracker/sleep_record.dart';
 
 class FirstScreen extends StatefulWidget {
   @override
@@ -12,15 +13,9 @@ class _FirstScreenState extends State<FirstScreen> {
   List<SleepRecord> sleepRecordList = [];
 
   ListTile prepareListTile(List<SleepRecord> sleepRecordList, int index) {
-    DateTime dateTime = sleepRecordList
-        .elementAt(index)
-        .currentDateTime;
-    String napOrSleep = sleepRecordList
-        .elementAt(index)
-        .dropdownSelectedValue;
-    Duration sleepDuration = sleepRecordList
-        .elementAt(index)
-        .selectedDuration;
+    DateTime dateTime = sleepRecordList.elementAt(index).currentDateTime;
+    String napOrSleep = sleepRecordList.elementAt(index).dropdownSelectedValue;
+    Duration sleepDuration = sleepRecordList.elementAt(index).selectedDuration;
 
     return ListTile(
       leading: Text(
@@ -44,7 +39,7 @@ class _FirstScreenState extends State<FirstScreen> {
   }
 
   void awaitReturnValueFromSecondScreen(BuildContext context) async {
-    final result = await Navigator.push(
+    final SleepRecord result = await Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => SecondScreen(),
@@ -58,7 +53,6 @@ class _FirstScreenState extends State<FirstScreen> {
       }
     });
   }
-  
 
   @override
   Widget build(BuildContext context) {

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'FirstScreen.dart';
+
+import 'first_screen.dart';
 
 void main() {
   runApp(SleepTracker());
