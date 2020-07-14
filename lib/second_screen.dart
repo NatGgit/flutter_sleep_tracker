@@ -11,7 +11,6 @@ class SecondScreen extends StatefulWidget {
 class _SecondScreenState extends State<SecondScreen> {
   final List<String> _dropdownOptions = ["Night's Sleep", 'Nap'];
   String selectedValue;
-
   Duration sleepDuration = const Duration();
 
   Text formatDateTime() {
@@ -125,10 +124,7 @@ class _SecondScreenState extends State<SecondScreen> {
                       builder: (BuildContext builder) {
                         return AlertDialog(
                           content: Container(
-                            height: MediaQuery
-                                .of(context)
-                                .size
-                                .height / 3,
+                            height: MediaQuery.of(context).size.height / 3,
                             child: CupertinoTimerPicker(
                               mode: CupertinoTimerPickerMode.hm,
                               minuteInterval: 5,
@@ -199,8 +195,8 @@ class _SecondScreenState extends State<SecondScreen> {
                   ),
                   borderRadius: BorderRadius.circular(30.0)),
               child: Container(
-                constraints: const BoxConstraints(
-                    maxWidth: 300.0, minHeight: 50.0),
+                constraints:
+                const BoxConstraints(maxWidth: 300.0, minHeight: 50.0),
                 alignment: Alignment.center,
                 child: Text(
                   'Save',

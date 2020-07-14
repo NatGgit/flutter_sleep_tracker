@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:ngsleeptracker/second_screen.dart';
 import 'package:ngsleeptracker/sleep_record.dart';
+import 'package:ngsleeptracker/sleep_record_list.dart';
 
 class FirstScreen extends StatefulWidget {
   @override
@@ -10,19 +11,19 @@ class FirstScreen extends StatefulWidget {
 }
 
 class _FirstScreenState extends State<FirstScreen> {
-  List<SleepRecord> sleepRecordList = [];
+  SleepRecordList sleepRecordList = SleepRecordList();
 
-  ListTile prepareListTile(List<SleepRecord> sleepRecordList, int index) {
-    final DateTime dateTime = sleepRecordList.elementAt(index).currentDateTime;
+  ListTile prepareListTile(SleepRecordList sleepRecordList, int index) {
+    final DateTime dateTime =
+        sleepRecordList.getElementAtIndex(index).currentDateTime;
     final String napOrSleep =
-        sleepRecordList.elementAt(index).dropdownSelectedValue;
+        sleepRecordList.getElementAtIndex(index).dropdownSelectedValue;
     final Duration sleepDuration =
-        sleepRecordList.elementAt(index).selectedDuration;
+        sleepRecordList.getElementAtIndex(index).selectedDuration;
 
     return ListTile(
       leading: Text(
-        // ignore: unnecessary_string_interpolations
-        '${DateFormat('h:mm\n a').format(dateTime)}',
+        DateFormat('h:mm\n a').format(dateTime),
         style: TextStyle(
           fontWeight: FontWeight.bold,
         ),
@@ -42,17 +43,17 @@ class _FirstScreenState extends State<FirstScreen> {
   }
 
   Future<void> awaitReturnValueFromSecondScreen(BuildContext context) async {
-    final SleepRecord result = await Navigator.push(
+    final SleepRecord newSleepRecord = await Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => SecondScreen(),
         ));
 
     setState(() {
-      if (result == null) {
+      if (newSleepRecord == null) {
         sleepRecordList = sleepRecordList;
       } else {
-        sleepRecordList.insert(0, result);
+        sleepRecordList.addRecordAtFirsPosition(newSleepRecord);
       }
     });
   }
@@ -130,7 +131,7 @@ class _FirstScreenState extends State<FirstScreen> {
                 .height / 3,
             alignment: Alignment.topLeft,
             child: ListView.builder(
-                itemCount: sleepRecordList.length,
+                itemCount: sleepRecordList.getListLength(),
                 itemBuilder: (BuildContext context, int index) {
                   return Card(
                     child: Padding(
