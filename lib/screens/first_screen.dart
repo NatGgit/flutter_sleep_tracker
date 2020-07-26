@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:ngsleeptracker/second_screen.dart';
-import 'package:ngsleeptracker/sleep_record.dart';
-import 'package:ngsleeptracker/sleep_record_list.dart';
+import 'package:ngsleeptracker/models/sleep_record_list.dart';
+import 'package:ngsleeptracker/screens/second_screen.dart';
+import 'package:provider/provider.dart';
 
 class FirstScreen extends StatefulWidget {
   @override
@@ -11,15 +11,12 @@ class FirstScreen extends StatefulWidget {
 }
 
 class _FirstScreenState extends State<FirstScreen> {
-  SleepRecordList sleepRecordList = SleepRecordList();
+  //SleepRecordList sleepRecordList = SleepRecordList();
 
   ListTile prepareListTile(SleepRecordList sleepRecordList, int index) {
-    final DateTime dateTime =
-        sleepRecordList.getElementAtIndex(index).currentDateTime;
-    final String napOrSleep =
-        sleepRecordList.getElementAtIndex(index).dropdownSelectedValue;
-    final Duration sleepDuration =
-        sleepRecordList.getElementAtIndex(index).selectedDuration;
+    final DateTime dateTime = sleepRecordList.getElementAtIndex(index).currentDateTime;
+    final String napOrSleep = sleepRecordList.getElementAtIndex(index).dropdownSelectedValue;
+    final Duration sleepDuration = sleepRecordList.getElementAtIndex(index).selectedDuration;
 
     return ListTile(
       leading: Text(
@@ -36,26 +33,9 @@ class _FirstScreenState extends State<FirstScreen> {
         ),
       ),
       subtitle: Text(
-        '${sleepDuration.inHours} hours ${sleepDuration.inMinutes.remainder(
-            60)} minutes',
+        '${sleepDuration.inHours} hours ${sleepDuration.inMinutes.remainder(60)} minutes',
       ),
     );
-  }
-
-  Future<void> awaitReturnValueFromSecondScreen(BuildContext context) async {
-    final SleepRecord newSleepRecord = await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => SecondScreen(),
-        ));
-
-    setState(() {
-      if (newSleepRecord == null) {
-        sleepRecordList = sleepRecordList;
-      } else {
-        sleepRecordList.addRecordAtFirsPosition(newSleepRecord);
-      }
-    });
   }
 
   @override
@@ -86,10 +66,14 @@ class _FirstScreenState extends State<FirstScreen> {
           ),
           RaisedButton(
             onPressed: () {
-              awaitReturnValueFromSecondScreen(context);
+              //awaitReturnValueFromSecondScreen(context);
+              Navigator.push<dynamic>(
+                  context,
+                  MaterialPageRoute<dynamic>(
+                    builder: (context) => SecondScreen(),
+                  ));
             },
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(80.0)),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
             padding: const EdgeInsets.all(0.0),
             child: Ink(
               decoration: BoxDecoration(
@@ -98,8 +82,7 @@ class _FirstScreenState extends State<FirstScreen> {
                   ),
                   borderRadius: BorderRadius.circular(30.0)),
               child: Container(
-                constraints:
-                const BoxConstraints(maxWidth: 300.0, minHeight: 50.0),
+                constraints: const BoxConstraints(maxWidth: 300.0, minHeight: 50.0),
                 alignment: Alignment.center,
                 child: Text(
                   'Add new sleeping record',
@@ -114,9 +97,7 @@ class _FirstScreenState extends State<FirstScreen> {
             alignment: Alignment.bottomLeft,
             child: Text(
               '${DateFormat.EEEE().format(DateTime.now()).toUpperCase()}, '
-                  '${DateFormat.d().add_LLL().add_y()
-                  .format(DateTime.now())
-                  .toUpperCase()}',
+                  '${DateFormat.d().add_LLL().add_y().format(DateTime.now()).toUpperCase()}',
               style: TextStyle(
                 fontSize: 15.0,
                 fontWeight: FontWeight.bold,
@@ -131,13 +112,13 @@ class _FirstScreenState extends State<FirstScreen> {
                 .height / 3,
             alignment: Alignment.topLeft,
             child: ListView.builder(
-                itemCount: sleepRecordList.getListLength(),
+                itemCount: Provider.of<SleepRecordList>(context).getListLength(),
+                //sleepRecordList.getListLength(),
                 itemBuilder: (BuildContext context, int index) {
                   return Card(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: prepareListTile(sleepRecordList, index),
-                    ),
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: prepareListTile(Provider.of<SleepRecordList>(context), index)),
                   );
                 }),
           ),
@@ -146,3 +127,19 @@ class _FirstScreenState extends State<FirstScreen> {
     );
   }
 }
+
+//  Future<void> awaitReturnValueFromSecondScreen(BuildContext context) async {
+//    final SleepRecord newSleepRecord = await Navigator.push(
+//        context,
+//        MaterialPageRoute(
+//          builder: (context) => SecondScreen(),
+//        ));
+//
+//    setState(() {
+//      if (newSleepRecord == null) {
+//        sleepRecordList = sleepRecordList;
+//      } else {
+//        sleepRecordList.addRecordAtFirsPosition(newSleepRecord);
+//      }
+//    });
+//  }

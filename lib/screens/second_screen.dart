@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:ngsleeptracker/sleep_record.dart';
+import 'package:ngsleeptracker/models/sleep_record.dart';
+import 'package:ngsleeptracker/models/sleep_record_list.dart';
+import 'package:provider/provider.dart';
 
 class SecondScreen extends StatefulWidget {
   @override
@@ -9,7 +11,6 @@ class SecondScreen extends StatefulWidget {
 }
 
 class _SecondScreenState extends State<SecondScreen> {
-  final List<String> _dropdownOptions = ["Night's Sleep", 'Nap'];
   String selectedValue;
   Duration sleepDuration = const Duration();
 
@@ -91,8 +92,7 @@ class _SecondScreenState extends State<SecondScreen> {
                     selectedValue = newValue;
                   });
                 },
-                items: _dropdownOptions
-                    .map<DropdownMenuItem<String>>((String value) {
+                items: ["Night's Sleep", 'Nap'].map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
                     child: Text(value),
@@ -118,7 +118,6 @@ class _SecondScreenState extends State<SecondScreen> {
               ),
               subtitle: FlatButton(
                 onPressed: () {
-                  // corrected due to changes in analysis_options (type added)
                   showDialog<AlertDialog>(
                       context: context,
                       builder: (BuildContext builder) {
@@ -148,8 +147,7 @@ class _SecondScreenState extends State<SecondScreen> {
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    '${sleepDuration.inHours}:${sleepDuration.inMinutes
-                        .remainder(60)}',
+                    '${sleepDuration.inHours}:${sleepDuration.inMinutes.remainder(60)}',
                     style: TextStyle(
                       color: Colors.grey.shade700,
                       fontSize: 17.0,
@@ -165,11 +163,12 @@ class _SecondScreenState extends State<SecondScreen> {
           RaisedButton(
             onPressed: () {
               final SleepRecord sleepRecordToAdd =
-              SleepRecord(DateTime.now(), selectedValue, sleepDuration);
+                  SleepRecord(DateTime.now(), selectedValue, sleepDuration);
               if (selectedValue != null && !(sleepDuration.inMinutes == 0)) {
-                Navigator.pop(context, sleepRecordToAdd);
+                Provider.of<SleepRecordList>(context, listen: false)
+                    .addRecordAtFirsPosition(sleepRecordToAdd);
+                Navigator.pop(context);
               } else {
-                // corrected due to changes in analysis_options (type added)
                 showDialog<AlertDialog>(
                     context: context,
                     builder: (BuildContext builder) {
@@ -185,8 +184,7 @@ class _SecondScreenState extends State<SecondScreen> {
                     });
               }
             },
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(80.0)),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
             padding: const EdgeInsets.all(0.0),
             child: Ink(
               decoration: BoxDecoration(
@@ -195,8 +193,7 @@ class _SecondScreenState extends State<SecondScreen> {
                   ),
                   borderRadius: BorderRadius.circular(30.0)),
               child: Container(
-                constraints:
-                const BoxConstraints(maxWidth: 300.0, minHeight: 50.0),
+                constraints: const BoxConstraints(maxWidth: 300.0, minHeight: 50.0),
                 alignment: Alignment.center,
                 child: Text(
                   'Save',
